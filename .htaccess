@@ -1,0 +1,9 @@
+order allow,deny
+allow from all
+
+RewriteEngine On
+RewriteBase /420DW3_07278_Project/
+# REDIRECTS ANY URL THAT DOES HOT BEGIN WITH '/420DW3_07278_Project/public/'
+# TO THE INDEX FILE FOR INTERNAL ROUTING.
+RewriteCond %{REQUEST_URI} !^/420DW3_07278_Project/public/.*$
+RewriteRule ^.*$ index.php [L,QSA]
