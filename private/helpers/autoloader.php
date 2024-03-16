@@ -23,7 +23,7 @@ require_once "constants.php";
  * @since  2024-03-14
  */
 function project_autoloader(string $classFQN) : void {
-    $path_from_fqn = str_replace("\\", "/", $classFQN);
+    $path_from_fqn = str_replace("\\", NAMESPACE_PATH_SEPARATOR, $classFQN);
     require_once PRJ_SRC_DIR . $path_from_fqn . ".php";
 }
 

@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Teacher\GivenCode\Exceptions;
 
 use Teacher\GivenCode\Exceptions\RuntimeException;
+use Throwable;
 
 /**
  * TODO: Class documentation
@@ -20,5 +21,59 @@ use Teacher\GivenCode\Exceptions\RuntimeException;
  * @since  2024-03-16
  */
 class RequestException extends RuntimeException {
+    private int $httpResponseCode = 500;
+    private array $httpHeaders = [];
+    
+    /**
+     * @param string         $message
+     * @param int            $httpResponseCode
+     * @param array          $httpHeaders
+     * @param int            $code
+     * @param Throwable|null $previous
+     */
+    public function __construct(string $message = "", int $httpResponseCode = 500, array $httpHeaders = [],
+                                int    $code = 0, ?Throwable $previous = null) {
+        parent::__construct($message, $code, $previous);
+        $this->httpResponseCode = $httpResponseCode;
+        $this->httpHeaders = $httpHeaders;
+    }
+    
+    /**
+     * TODO: Function documentation
+     *
+     * @return int
+     *
+     * @author Marc-Eric Boury
+     * @since  2024-03-16
+     */
+    public function getHttpResponseCode() : int {
+        return $this->httpResponseCode;
+    }
+    
+    /**
+     * TODO: Function documentation
+     *
+     * @return array
+     *
+     * @author Marc-Eric Boury
+     * @since  2024-03-16
+     */
+    public function getHttpHeaders() : array {
+        return $this->httpHeaders;
+    }
+    
+    /**
+     * TODO: Function documentation
+     *
+     * @param string $headerKey
+     * @param string $headerValue
+     * @return void
+     *
+     * @author Marc-Eric Boury
+     * @since  2024-03-16
+     */
+    public function addHeader(string $headerKey, string $headerValue) : void {
+        $this->httpHeaders[$headerKey] = $headerValue;
+    }
     
 }

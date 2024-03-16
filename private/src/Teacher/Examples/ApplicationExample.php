@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Teacher\Examples;
 
+use Teacher\GivenCode\Exceptions\RequestException;
+use Teacher\GivenCode\Services\APIRouter;
+
 /**
  * TODO: Class documentation
  *
@@ -18,5 +21,33 @@ namespace Teacher\Examples;
  * @since  2024-03-14
  */
 class ApplicationExample {
+    private APIRouter $router;
     
+    public function __construct() {
+        $this->router = new APIRouter();
+    }
+    
+    /**
+     * TODO: Function documentation
+     *
+     * @return void
+     *
+     * @author Marc-Eric Boury
+     * @since  2024-03-16
+     */
+    public function run() : void {
+        try {
+            $this->router->route();
+        } catch (RequestException $reqExep) {
+            foreach ($reqExep->getHttpHeaders() as $headerName => $headerValue) {
+                header($headerName . ": " . $headerValue);
+            }
+            http_response_code($reqExep->getHttpResponseCode());
+            die();
+        } catch (\Exception $otherException) {
+            http_response_code(500);
+            echo '<span style="color: red;">' . generateExceptionHtml($otherException) . '</span>';
+            die();
+        }
+    }
 }

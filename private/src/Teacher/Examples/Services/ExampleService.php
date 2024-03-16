@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 /*
- * 420DW3_07278_Project ExempleService.php
+ * 420DW3_07278_Project ExampleService.php
  * 
  * @author Marc-Eric Boury (MEbou)
  * @since 2024-03-16
@@ -19,6 +19,6 @@ use Teacher\GivenCode\Abstracts\IService;
  * @author Marc-Eric Boury
  * @since  2024-03-16
  */
-class ExempleService implements IService {
+class ExampleService implements IService {
     
 }

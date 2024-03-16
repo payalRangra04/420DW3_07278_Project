@@ -11,7 +11,9 @@ declare(strict_types=1);
 
 namespace Teacher\GivenCode\Domain;
 
+use Teacher\GivenCode\Abstracts\AbstractController;
 use Teacher\GivenCode\Enumerations\HTTPMethodsEnum;
+use Teacher\GivenCode\Exceptions\ValidationException;
 
 /**
  * TODO: Class documentation
@@ -20,36 +22,35 @@ use Teacher\GivenCode\Enumerations\HTTPMethodsEnum;
  * @since  2024-03-14
  */
 class APIRoute {
-    private HTTPMethodsEnum $method;
+    private string $uri;
     private string $controllerClass;
     
     /**
      * TODO: documentation
      *
-     * @param HTTPMethodsEnum $method
-     * @param string          $controllerClass
+     * @param string $uri
+     * @param string $controllerClass
+     * @throws ValidationException
      */
-    public function __construct(HTTPMethodsEnum $method, string $controllerClass) {
-        $this->method = $method;
+    public function __construct(string $uri, string $controllerClass) {
+        if (!class_exists($controllerClass)) {
+            throw new ValidationException("APIRoute specified controller class [$controllerClass] does not exists.");
+        }
+        if (!is_a($controllerClass, AbstractController::class, true)) {
+            throw new ValidationException("APIRoute specified controller class [$controllerClass] does not extend [" .
+                                          AbstractController::class . "].");
+        }
+        $this->uri = $uri;
         $this->controllerClass = $controllerClass;
     }
     
     /**
      * TODO: documentation
      *
-     * @return HTTPMethodsEnum
+     * @return string
      */
-    public function getMethod() : HTTPMethodsEnum {
-        return $this->method;
-    }
-    
-    /**
-     * TODO: documentation
-     *
-     * @param HTTPMethodsEnum $method
-     */
-    public function setMethod(HTTPMethodsEnum $method) : void {
-        $this->method = $method;
+    public function getUri() : string {
+        return $this->uri;
     }
     
     /**
@@ -59,15 +60,6 @@ class APIRoute {
      */
     public function getControllerClass() : string {
         return $this->controllerClass;
-    }
-    
-    /**
-     * TODO: documentation
-     *
-     * @param string $controllerClass
-     */
-    public function setControllerClass(string $controllerClass) : void {
-        $this->controllerClass = $controllerClass;
     }
     
 }

@@ -94,3 +94,23 @@ function debug(mixed $input, bool $doEcho = true, bool $doDie = false) : string 
     }
     return $return_value;
 }
+
+/**
+ * TODO: Function documentation
+ *
+ * @param Throwable $thrown
+ * @return void
+ *
+ * @author Marc-Eric Boury
+ * @since  2024-03-16
+ */
+function generateExceptionHtml(Throwable $thrown) : void {
+    echo "<h1>" . $thrown::class . "</h1>";
+    echo "<h3>" . $thrown->getMessage() . "</h3>";
+    $stack_trace = $thrown->getTraceAsString();
+    while ($thrown->getPrevious() instanceof Throwable){
+        $thrown = $thrown->getPrevious();
+        echo $thrown::class . ": " . $thrown->getMessage() . "<br/>";
+    }
+    echo "<pre>" . $stack_trace . "</pre>";
+}

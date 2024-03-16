@@ -14,6 +14,9 @@ declare(strict_types=1);
  * @const
  */
 const WEB_DIRECTORY_SEPARATOR = "/";
+const NAMESPACE_PATH_SEPARATOR = "/";
+const DB_DATETIME_FORMAT = "Y-m-d H:i:s.u";
+const HTML_DATETIME_FORMAT = "Y-m-d\TH:i:sP";
 
 
 // <editor-fold defaultstate="collapsed" desc="ABSOLUTE PATHS (FILESYSTEM PATHS)">

@@ -19,4 +19,14 @@ namespace Teacher\GivenCode\Abstracts;
  */
 interface IDAO {
     
+    public function getById(int $id) : ?AbstractDTO;
+    
+    public function create(AbstractDTO $dto) : AbstractDTO;
+    
+    public function update(AbstractDTO $dto) : AbstractDTO;
+    
+    public function delete(AbstractDTO $dto) : void;
+    
+    public function deleteById(int $id) : void;
+    
 }

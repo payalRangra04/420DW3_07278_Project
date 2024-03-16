@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Teacher\GivenCode\Enumerations;
 
+use JetBrains\PhpStorm\Pure;
+
 /**
  * TODO: Enumeration documentation
  *
@@ -22,4 +24,18 @@ enum HTTPMethodsEnum: string {
     case POST = "POST";
     case PUT = "PUT";
     case DELETE = "DELETE";
+    
+    /**
+     * TODO: Function documentation
+     *
+     * @static
+     * @param string $methodString
+     * @return HTTPMethodsEnum
+     *
+     * @author Marc-Eric Boury
+     * @since  2024-03-16
+     */
+    #[Pure] public static function getValue(string $methodString) : HTTPMethodsEnum {
+        return self::from(strtoupper(trim($methodString)));
+    }
 }

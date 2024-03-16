@@ -12,6 +12,8 @@ declare(strict_types=1);
 namespace Teacher\GivenCode\Abstracts;
 
 
+use http\Exception\RuntimeException;
+
 /**
  * TODO: Class documentation
  *
@@ -22,18 +24,18 @@ abstract class AbstractDTO implements IDTO {
     use DTOTrait;
     
     /**
-     * Constructor
-     *
-     * @param int $id
+     * Constructor for {@see AbstractDTO}.
      */
-    public function __construct(int $id) {
-        $this->id = $id;
-    }
+    public function __construct() {}
     
     /**
      * @inheritDoc
+     * @throws RuntimeException If the primary key value is not set.
      */
     public function getPrimaryKeyValue() : int {
+        if (empty($this->id)) {
+            throw new RuntimeException("Primary key value is not set.");
+        }
         return $this->id;
     }
     
