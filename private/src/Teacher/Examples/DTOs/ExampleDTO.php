@@ -15,9 +15,10 @@ use DateTime;
 use JetBrains\PhpStorm\Pure;
 use Teacher\Examples\Enumerations\DaysOfWeekEnum;
 use Teacher\GivenCode\Abstracts\AbstractDTO;
+use Teacher\GivenCode\Exceptions\ValidationException;
 
 /**
- * TODO: Class documentation
+ * Example DTO-type class
  *
  * @author Marc-Eric Boury
  * @since  2024-03-14
@@ -29,6 +30,7 @@ class ExampleDTO extends AbstractDTO {
      * @const
      */
     public const TABLE_NAME = "ExampleEntity";
+    private const DESCRIPTION_MAX_LENGTH = 256;
     
     
     private DaysOfWeekEnum $dayOfTheWeek;
@@ -36,61 +38,87 @@ class ExampleDTO extends AbstractDTO {
     private ?DateTime $creationDate;
     private ?DateTime $lastModificationDate;
     private ?DateTime $deletionDate;
-    // ...
+    
+    
+    // <editor-fold defaultstate="collapsed" desc="CONSTRUCTORS">
     
     /**
-     * Contructor
+     * Empty protected constructor function.
+     * Use {@see ExampleDTO::fromValues()} or {@see ExampleDTO::fromDbArray()} to create object instances.
      *
-     * @param int            $id
-     * @param DaysOfWeekEnum $dayOfTheWeek
-     * @param string         $description
-     * @param DateTime|null  $creationDate
-     * @param DateTime|null  $lastModificationDate
-     * @param DateTime|null  $deletionDate
+     * This empty constructor allows the internal creation of instances with or without the normally required 'id' and other
+     * database-managed attributes.
+     *
      */
-    #[Pure] protected function __construct() {
+    protected function __construct() {
         parent::__construct();
     }
     
     /**
-     * TODO: Function documentation
+     * Static constructor-like function to create {@see ExampleDTO} instances without an id or temporal management
+     * attribute values. Used to create instances before inserting them in the database.
      *
      * @static
-     * @param DaysOfWeekEnum $dayOfTheWeek
-     * @param string         $description
-     * @return ExampleDTO
+     * @param DaysOfWeekEnum $dayOfTheWeek The initial value for the {@see ExampleDTO::$dayOfTheWeek} property.
+     * @param string         $description  The initial value for the {@see ExampleDTO::$description} property.
+     * @return ExampleDTO The created {@see ExampleDTO} instance.
      *
+     * @throws ValidationException If a {@see ValidationException} is thrown when setting the passed arguments as property values.
      * @author Marc-Eric Boury
      * @since  2024-03-16
      */
-    #[Pure] public static function fromValues(DaysOfWeekEnum $dayOfTheWeek, string $description) : ExampleDTO {
+    public static function fromValues(DaysOfWeekEnum $dayOfTheWeek, string $description) : ExampleDTO {
+        // Use the protected constructor to create an empty ExampleDTO instance
         $object = new ExampleDTO();
-        $object->dayOfTheWeek = $dayOfTheWeek;
-        $object->description = $description;
+        
+        // Set the property values from the parameters.
+        // Using the setter methods allows me to validate the values on the spot.
+        $object->setDayOfTheWeek($dayOfTheWeek);
+        $object->setDescription($description);
+        
+        // return the created instance
         return $object;
     }
     
     /**
-     * TODO: Function documentation
+     * Static constructor-like function to create {@see ExampleDTO} instances with an id and temporal management
+     * attribute values. Used to create instances from database-fetched arrays.
      *
      * @static
-     * @param array $dbAssocArray
-     * @return ExampleDTO
+     * @param array $dbAssocArray The associative array of a fetched record of an {@see ExampleDTO} entity from the
+     *                            database.
+     * @return ExampleDTO The created {@see ExampleDTO} instance.
      *
+     * @throws ValidationException If a {@see ValidationException} is thrown when setting the passed arguments as property values.
      * @author Marc-Eric Boury
      * @since  2024-03-16
      */
     public static function fromDbArray(array $dbAssocArray) : ExampleDTO {
+        // Use the protected constructor to create an empty ExampleDTO instance
         $object = new ExampleDTO();
-        $object->id = (int) $dbAssocArray["id"];
-        $object->dayOfTheWeek = DaysOfWeekEnum::from($dbAssocArray["dayOfTheWeek"]);
-        $object->description = $dbAssocArray["description"];
-        $object->creationDate = DateTime::createFromFormat(DB_DATETIME_FORMAT, $dbAssocArray["created_at"]);
-        $object->lastModificationDate =
-            DateTime::createFromFormat(DB_DATETIME_FORMAT, $dbAssocArray["last_modified_at"]);
-        $object->deletionDate = DateTime::createFromFormat(DB_DATETIME_FORMAT, $dbAssocArray["deleted_at"]);
+        
+        // Set the property values from the array parameter
+        // do not forget to cast numeric values!
+        $object->setId((int) $dbAssocArray["id"]);
+        // conversion from DB string values back to enumeration value
+        $object->setDayOfTheWeek(DaysOfWeekEnum::from($dbAssocArray["dayOfTheWeek"]));
+        $object->setDescription($dbAssocArray["description"]);
+        // conversion from DB-formatted datetime strings back into DateTime objects.
+        $object->setCreationDate(
+            DateTime::createFromFormat(DB_DATETIME_FORMAT, $dbAssocArray["created_at"])
+        );
+        $object->setLastModificationDate(
+            DateTime::createFromFormat(DB_DATETIME_FORMAT, $dbAssocArray["last_modified_at"])
+        );
+        $object->setDeletionDate(
+            DateTime::createFromFormat(DB_DATETIME_FORMAT, $dbAssocArray["deleted_at"])
+        );
+        
+        // return the created instance
         return $object;
     }
+    
+    // </editor-fold>
     
     
     /**
@@ -99,6 +127,8 @@ class ExampleDTO extends AbstractDTO {
     public function getDatabaseTableName() : string {
         return self::TABLE_NAME;
     }
+    
+    // <editor-fold defaultstate="collapsed" desc="GETTERS AND SETTERS">
     
     /**
      * Getter for <code>DayOfTheWeek</code>
@@ -131,8 +161,13 @@ class ExampleDTO extends AbstractDTO {
      * Setter for <code>Description</code>
      *
      * @param string $description
+     * @throws ValidationException If the value is invalid.
      */
     public function setDescription(string $description) : void {
+        if (mb_strlen($description) > self::DESCRIPTION_MAX_LENGTH) {
+            throw new ValidationException("Description value must not be longer than " . self::DESCRIPTION_MAX_LENGTH .
+                                          " characters.");
+        }
         $this->description = $description;
     }
     
@@ -189,5 +224,124 @@ class ExampleDTO extends AbstractDTO {
     public function setDeletionDate(?DateTime $deletionDate) : void {
         $this->deletionDate = $deletionDate;
     }
+    
+    // </editor-fold>
+    
+    
+    // <editor-fold defaultstate="collapsed" desc="VALIDATION METHODS">
+    
+    /**
+     * Validates the instance for creation of its record in the database.
+     *
+     * @param bool $optThrowExceptions [OPTIONAL] Whether to throw exceptions or not if invalid. Defaults to true.
+     * @return bool <code>True</code> if valid, <code>false</code> otherwise.
+     * @throws ValidationException If the instance is invalid and the <code>$optThrowExceptions</code> parameter is <code>true</code>.
+     *
+     * @author Marc-Eric Boury
+     * @since  2024-03-17
+     */
+    public function validateForDbCreation(bool $optThrowExceptions = true) : bool {
+        // ID must not be set
+        if (!empty($this->id)) {
+            if ($optThrowExceptions) {
+                throw new ValidationException("ExampleDTO is not valid for DB creation: ID value already set.");
+            }
+            return false;
+        }
+        // dayOfTheWeek is required
+        if (empty($this->dayOfTheWeek)) {
+            if ($optThrowExceptions) {
+                throw new ValidationException("ExampleDTO is not valid for DB creation: dayOfTheWeek value not set.");
+            }
+            return false;
+        }
+        // description is required
+        if (empty($this->description)) {
+            if ($optThrowExceptions) {
+                throw new ValidationException("ExampleDTO is not valid for DB creation: description value not set.");
+            }
+            return false;
+        }
+        // creationDate must not be set
+        if (!is_null($this->creationDate)) {
+            if ($optThrowExceptions) {
+                throw new ValidationException("ExampleDTO is not valid for DB creation: creationDate value already set.");
+            }
+            return false;
+        }
+        // lastModificationDate must not be set
+        if (!is_null($this->lastModificationDate)) {
+            if ($optThrowExceptions) {
+                throw new ValidationException("ExampleDTO is not valid for DB creation: lastModificationDate value already set.");
+            }
+            return false;
+        }
+        // deletionDate must not be set
+        if (!is_null($this->deletionDate)) {
+            if ($optThrowExceptions) {
+                throw new ValidationException("ExampleDTO is not valid for DB creation: deletionDate value already set.");
+            }
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * Validates the instance for the update of its record in the database.
+     *
+     * @param bool $optThrowExceptions [OPTIONAL] Whether to throw exceptions or not if invalid. Defaults to true.
+     * @return bool <code>True</code> if valid, <code>false</code> otherwise.
+     * @throws ValidationException If the instance is invalid and the <code>$optThrowExceptions</code> parameter is <code>true</code>.
+     *
+     * @author Marc-Eric Boury
+     * @since  2024-03-17
+     */
+    public function validateForDbUpdate(bool $optThrowExceptions = true) : bool {
+        // ID is required
+        if (!empty($this->id)) {
+            if ($optThrowExceptions) {
+                throw new ValidationException("ExampleDTO is not valid for DB creation: ID value is not set.");
+            }
+            return false;
+        }
+        // dayOfTheWeek is required
+        if (empty($this->dayOfTheWeek)) {
+            if ($optThrowExceptions) {
+                throw new ValidationException("ExampleDTO is not valid for DB creation: dayOfTheWeek value not set.");
+            }
+            return false;
+        }
+        // description is required
+        if (empty($this->description)) {
+            if ($optThrowExceptions) {
+                throw new ValidationException("ExampleDTO is not valid for DB creation: description value not set.");
+            }
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * Validates the instance for the deletion of its record in the database.
+     *
+     * @param bool $optThrowExceptions [OPTIONAL] Whether to throw exceptions or not if invalid. Defaults to true.
+     * @return bool <code>True</code> if valid, <code>false</code> otherwise.
+     * @throws ValidationException If the instance is invalid and the <code>$optThrowExceptions</code> parameter is <code>true</code>.
+     *
+     * @author Marc-Eric Boury
+     * @since  2024-03-17
+     */
+    public function validateForDbDelete(bool $optThrowExceptions = true) : bool {
+        // ID is required
+        if (!empty($this->id)) {
+            if ($optThrowExceptions) {
+                throw new ValidationException("ExampleDTO is not valid for DB creation: ID value is not set.");
+            }
+            return false;
+        }
+        return true;
+    }
+    
+    // </editor-fold>
     
 }
