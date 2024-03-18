@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
 * DBConnectionService.php
 * 420DW3_07278_Project
@@ -9,6 +10,7 @@ namespace Teacher\GivenCode\Services;
 
 use PDO;
 use Teacher\GivenCode\Abstracts\IService;
+use Teacher\GivenCode\Exceptions\RuntimeException;
 
 /**
  * TODO: Class documentation
@@ -27,12 +29,17 @@ class DBConnectionService implements IService {
      * @static
      * @return PDO
      *
+     * @throws RuntimeException
      * @author Marc-Eric Boury
      * @since  2024-03-16
      */
     public static function getConnection() : PDO {
-        self::$CONNECTION ??= new PDO("mysql:dbname=" . self::DB_NAME . ";host=" . $_SERVER["HTTP_HOST"], "root", "");
-        return self::$CONNECTION;
+        try {
+            self::$CONNECTION ??= new PDO("mysql:dbname=" . self::DB_NAME . ";host=" . $_SERVER["HOS"], "root", "");
+            return self::$CONNECTION;
+        } catch (\PDOException $exception) {
+            throw new RuntimeException("Failure to connect to the database: " . $exception->getMessage());
+        }
     }
     
 }

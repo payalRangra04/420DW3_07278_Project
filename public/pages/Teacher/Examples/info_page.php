@@ -1,9 +1,12 @@
 <?php
+declare(strict_types=1);
 /*
 * info_page.php
 * 420DW3_07278_Project
 * (c) 2024 Marc-Eric Boury All rights reserved
 */
+
+require_once "../../../../private/helpers/init.php";
 
 ?>
 <!DOCTYPE html>
@@ -32,6 +35,12 @@ echo "WEB_IMAGES_DIR:" . WEB_IMAGES_DIR . "<br/>";
 echo "WEB_JS_DIR:" . WEB_JS_DIR . "<br/>";
 echo "WEB_PAGES_DIR:" . WEB_PAGES_DIR . "<br/>";
 echo "<br/>";
+
+debug($_SERVER);
+
+echo "<br/><br/>";
+
+phpinfo();
 
 ?>
 
