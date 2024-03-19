@@ -9,6 +9,7 @@ declare(strict_types=1);
  * (c) Copyright 2024 Marc-Eric Boury 
  */
 
+require_once "constants.php";
 
 /**
  * Basic debug helper function. Generates an HTML table string for whatever value is provided in <code>$input</code>.
@@ -28,7 +29,7 @@ declare(strict_types=1);
  * @since  2023-01-05
  */
 function debug(mixed $input, bool $doEcho = true, bool $doDie = false) : string {
-    $return_value = "<table style='border: 1px solid black; border-collapse: collapse;'>";
+    $return_value = "<table style='border: 1px solid black; border-collapse: collapse; max-width: 100%;'>";
     $input_type = gettype($input);
     switch ($input_type) {
         case "boolean":
@@ -53,7 +54,7 @@ function debug(mixed $input, bool $doEcho = true, bool $doDie = false) : string 
                     $key_name = "\"$key\"";
                 }
                 $return_value .= "<tr><td style='border: 1px solid black;'>$key_name</td><td style='border: 1px solid black;'>" .
-                    debug($value, false) . "</td>";
+                    debug($value, false) . "</td></tr>";
             }
             $return_value .= "</table></td></tr>";
             break;
@@ -66,7 +67,7 @@ function debug(mixed $input, bool $doEcho = true, bool $doDie = false) : string 
                 foreach ($properties as $property) {
                     $return_value .= "<tr><td style='border: 1px solid black;'>\"" . $property->getName() .
                         "\"</td><td style='border: 1px solid black;'>" .
-                        debug($property->getValue($input), false) . "</td>";
+                        debug($property->getValue($input), false) . "</td></tr>";
                 }
                 $return_value .= "</table></td></tr>";
             } catch (ReflectionException $refl_ex) {
@@ -104,13 +105,26 @@ function debug(mixed $input, bool $doEcho = true, bool $doDie = false) : string 
  * @author Marc-Eric Boury
  * @since  2024-03-16
  */
-function generateExceptionHtml(Throwable $thrown) : void {
+function generate_exception_html(Throwable $thrown) : void {
     echo "<h1>" . $thrown::class . "</h1>";
     echo "<h3>" . $thrown->getMessage() . "</h3>";
     $stack_trace = $thrown->getTraceAsString();
-    while ($thrown->getPrevious() instanceof Throwable){
+    while ($thrown->getPrevious() instanceof Throwable) {
         $thrown = $thrown->getPrevious();
         echo $thrown::class . ": " . $thrown->getMessage() . "<br/>";
     }
     echo "<pre>" . $stack_trace . "</pre>";
+}
+
+/**
+ * TODO: Function documentation
+ *
+ * @return void
+ *
+ * @author Marc-Eric Boury
+ * @since  2024-03-19
+ */
+function get_debug_page() : void {
+    include PRJ_PAGES_DIRE . "debug_page.php";
+    die();
 }

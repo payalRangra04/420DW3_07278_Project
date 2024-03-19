@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 /*
-* info_page.php
+* debug_page.php
 * 420DW3_07278_Project
 * (c) 2024 Marc-Eric Boury All rights reserved
 */
 
-require_once "../../../../private/helpers/init.php";
+require_once "../../private/helpers/init.php";
 
 ?>
 <!DOCTYPE html>
@@ -14,12 +14,12 @@ require_once "../../../../private/helpers/init.php";
 <head>
     <title>Request information page</title>
 </head>
-<body>
+<body style="width: 100%;">
 <?php
 
-echo "REQUEST METHOD: " . $_SERVER["REQUEST_METHOD"] . "<br/><br/>";
-echo "REQUEST URI: " . $_SERVER["REQUEST_URI"] . "<br/><br/>";
-echo "DEFINED PATH CONSTANTS:<br/>";
+echo "<h2>REQUEST METHOD:</h2> " . $_SERVER["REQUEST_METHOD"] . "<br/><br/>";
+echo "<h2>REQUEST URI:</h2> " . $_SERVER["REQUEST_URI"] . "<br/><br/>";
+echo "<h2>DEFINED PATH CONSTANTS:</h2><br/>";
 echo "PRJ_ROOT_DIR:" . PRJ_ROOT_DIR . "<br/>";
 echo "PRJ_PRIVATE_DIR:" . PRJ_PRIVATE_DIR . "<br/>";
 echo "PRJ_SRC_DIR:" . PRJ_SRC_DIR . "<br/>";
@@ -36,6 +36,12 @@ echo "WEB_JS_DIR:" . WEB_JS_DIR . "<br/>";
 echo "WEB_PAGES_DIR:" . WEB_PAGES_DIR . "<br/>";
 echo "<br/>";
 
+echo '<h2>$_REQUEST:</h2><br/>';
+debug($_REQUEST);
+
+echo "<br/><br/>";
+
+echo '<h2>$_SERVER:</h2><br/>';
 debug($_SERVER);
 
 echo "<br/><br/>";

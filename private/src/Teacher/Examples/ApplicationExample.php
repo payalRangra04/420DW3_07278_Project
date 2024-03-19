@@ -46,7 +46,7 @@ class ApplicationExample {
             die();
         } catch (\Exception $otherException) {
             http_response_code(500);
-            echo '<span style="color: red;">' . generateExceptionHtml($otherException) . '</span>';
+            echo '<span style="color: red;">' . generate_exception_html($otherException) . '</span>';
             die();
         }
     }
