@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
 * AbstractController.php
 * 420DW3_07278_Project
@@ -16,13 +17,13 @@ abstract class AbstractController implements IController {
     public function __construct() {}
     
     public function getAllowedMethods() : array {
-        $allowedMethodsArray = [];
-        foreach (HTTPMethodsEnum::cases() as $httpEnumCase) {
-            if (method_exists(static::class, strtolower($httpEnumCase->value))) {
-                $allowedMethodsArray[] = $httpEnumCase->value;
+        $allowed_methods_array = [];
+        foreach (HTTPMethodsEnum::cases() as $http_enum_case) {
+            if (method_exists(static::class, strtolower($http_enum_case->value))) {
+                $allowed_methods_array[] = $http_enum_case->value;
             }
         }
-        return $allowedMethodsArray;
+        return $allowed_methods_array;
     }
     
     public function callHttpMethod(HTTPMethodsEnum $method) : void {

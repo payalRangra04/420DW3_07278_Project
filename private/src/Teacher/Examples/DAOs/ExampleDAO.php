@@ -47,6 +47,33 @@ class ExampleDAO implements IDAO {
     public function __construct() {}
     
     /**
+     * TODO: Function documentation
+     *
+     * @param bool $includeDeleted
+     * @return ExampleDTO[]
+     * @throws RuntimeException
+     * @throws ValidationException
+     *
+     * @author Marc-Eric Boury
+     * @since  2024-03-21
+     */
+    public function getAll(bool $includeDeleted = false) : array {
+        $connection = DBConnectionService::getConnection();
+        if ($includeDeleted) {
+            $statement = $connection->prepare("SELECT * FROM " . ExampleDTO::TABLE_NAME);
+        } else {
+            $statement = $connection->prepare("SELECT * FROM " . ExampleDTO::TABLE_NAME . " WHERE `deleted_at` IS NULL ;");
+        }
+        $statement->execute();
+        $results_array = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $object_array = [];
+        foreach ($results_array as $result) {
+            $object_array[] = ExampleDTO::fromDbArray($result);
+        }
+        return $object_array;
+    }
+    
+    /**
      * {@inheritDoc}
      * Specialized for {@see ExampleDTO} DTO objects.
      *

@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 /*
- * 420DW3_07278_Project APIRouter.php
+ * 420DW3_07278_Project InternalRouter.php
  * 
  * @author Marc-Eric Boury (MEbou)
  * @since 2024-03-14
@@ -15,7 +15,8 @@ use Teacher\Examples\Controllers\ExampleController;
 use Teacher\GivenCode\Abstracts\AbstractController;
 use Teacher\GivenCode\Abstracts\IService;
 use Teacher\GivenCode\Domain\APIRoute;
-use Teacher\GivenCode\Domain\APIRouteCollection;
+use Teacher\GivenCode\Domain\RouteCollection;
+use Teacher\GivenCode\Domain\WebpageRoute;
 use Teacher\GivenCode\Enumerations\HTTPMethodsEnum;
 use Teacher\GivenCode\Exceptions\RequestException;
 use Teacher\GivenCode\Exceptions\ValidationException;
@@ -26,19 +27,21 @@ use Teacher\GivenCode\Exceptions\ValidationException;
  * @author Marc-Eric Boury
  * @since  2024-03-14
  */
-class APIRouter implements IService {
+class InternalRouter implements IService {
     
-    private string $uri_base_directory;
-    private APIRouteCollection $routes;
+    private string $uriBaseDirectory;
+    private RouteCollection $routes;
     
     /**
      * @param string $uri_base_directory
      * @throws ValidationException
      */
     public function __construct(string $uri_base_directory = "") {
-        $this->uri_base_directory = $uri_base_directory;
-        $this->routes = new APIRouteCollection();
+        $this->uriBaseDirectory = $uri_base_directory;
+        $this->routes = new RouteCollection();
         $this->routes->addRoute(new APIRoute("/api/exempleDTO", ExampleController::class));
+        $this->routes->addRoute(new WebpageRoute("/index.php", "Teacher/Examples/example_page.php"));
+        $this->routes->addRoute(new WebpageRoute("/", "Teacher/Examples/example_page.php"));
     }
     
     /**
@@ -51,23 +54,15 @@ class APIRouter implements IService {
      * @since  2024-03-16
      */
     public function route() : void {
-        $uri = $_SERVER["REQUEST_URI"];
-        $method = HTTPMethodsEnum::getValue($_SERVER["REQUEST_METHOD"]);
-        $route = $this->routes->match($uri, $this->uri_base_directory);
+        $path = REQUEST_PATH;
+        $route = $this->routes->match($path, $this->uriBaseDirectory);
         
         if (is_null($route)) {
             // route not found
-            throw new RequestException("Route [$uri] not found.", 404);
+            throw new RequestException("Route [$path] not found.", 404);
         }
         
-        $controllerClass = $route->getControllerClass();
-        $controller = (new $controllerClass());
-        if (!($controller instanceof AbstractController)) {
-            // this should not happen ever as it is validated inside the APIRoute constructor.
-            throw new Exception("APIRoute specified controller class [$controllerClass] does not extend [" .
-                                AbstractController::class . "].");
-        }
-        $controller->callHttpMethod($method);
+        $route->route();
         
     }
 }

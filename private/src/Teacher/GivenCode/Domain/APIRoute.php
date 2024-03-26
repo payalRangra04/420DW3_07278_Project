@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Teacher\GivenCode\Domain;
 
+use Exception;
 use Teacher\GivenCode\Abstracts\AbstractController;
 use Teacher\GivenCode\Enumerations\HTTPMethodsEnum;
 use Teacher\GivenCode\Exceptions\ValidationException;
@@ -21,8 +22,8 @@ use Teacher\GivenCode\Exceptions\ValidationException;
  * @author Marc-Eric Boury
  * @since  2024-03-14
  */
-class APIRoute {
-    private string $uri;
+class APIRoute extends AbstractRoute {
+    private string $routePath;
     private string $controllerClass;
     
     /**
@@ -40,17 +41,8 @@ class APIRoute {
             throw new ValidationException("APIRoute specified controller class [$controllerClass] does not extend [" .
                                           AbstractController::class . "].");
         }
-        $this->uri = $uri;
+        parent::__construct($uri);
         $this->controllerClass = $controllerClass;
-    }
-    
-    /**
-     * TODO: documentation
-     *
-     * @return string
-     */
-    public function getUri() : string {
-        return $this->uri;
     }
     
     /**
@@ -62,4 +54,16 @@ class APIRoute {
         return $this->controllerClass;
     }
     
+    public function route() : void {
+        $method = HTTPMethodsEnum::getValue($_SERVER["REQUEST_METHOD"]);
+        $controller_class = $this->getControllerClass();
+        $controller = (new $controller_class());
+        if (!($controller instanceof AbstractController)) {
+            // this should not happen ever as it is validated inside the APIRoute constructor.
+            throw new Exception("APIRoute specified controller class [$controller_class] does not extend [" .
+                                AbstractController::class . "].");
+        }
+        $controller->callHttpMethod($method);
+        
+    }
 }
