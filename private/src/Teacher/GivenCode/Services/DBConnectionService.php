@@ -35,7 +35,7 @@ class DBConnectionService implements IService {
      */
     public static function getConnection() : PDO {
         try {
-            self::$CONNECTION ??= new PDO("mysql:dbname=" . self::DB_NAME . ";host=" . $_SERVER["HOS"], "root", "");
+            self::$CONNECTION ??= new PDO("mysql:dbname=" . self::DB_NAME . ";host=" . $_SERVER["HTTP_HOST"], "root", "");
             return self::$CONNECTION;
         } catch (\PDOException $exception) {
             throw new RuntimeException("Failure to connect to the database: " . $exception->getMessage());

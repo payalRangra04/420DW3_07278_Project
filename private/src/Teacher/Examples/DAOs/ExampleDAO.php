@@ -188,9 +188,11 @@ class ExampleDAO implements IDAO {
      * Specialized for {@see ExampleDTO} DTO objects.
      *
      * @param int  $id          The identifier value of the {@see ExampleDTO} entity to delete
-     * @param bool $realDeletes [OPTIONAL] whether to perform a real record deletion or just mark it with a deletion date. Defaults to <code>false</code>.
+     * @param bool $realDeletes [OPTIONAL] whether to perform a real record deletion or just mark it with a deletion
+     *                          date. Defaults to <code>false</code>.
      * @return void
      *
+     * @throws RuntimeException
      * @author Marc-Eric Boury
      * @since  2024-03-17
      */

@@ -50,7 +50,7 @@ class ExampleDTO extends AbstractDTO {
      * database-managed attributes.
      *
      */
-    protected function __construct() {
+    public function __construct() {
         parent::__construct();
     }
     
@@ -343,5 +343,25 @@ class ExampleDTO extends AbstractDTO {
     }
     
     // </editor-fold>
+    
+    /**
+     * TODO: Function documentation
+     *
+     * @return string
+     *
+     * @author Marc-Eric Boury
+     * @since  2024-03-28
+     */
+    public function toJson() : string {
+        $array = [
+            "id" => $this->getId(),
+            "dayOfTheWeek" => $this->getDayOfTheWeek()->value,
+            "description" => $this->description,
+            "creationDate" => $this->getCreationDate()->format(HTML_DATETIME_FORMAT),
+            "lastModificationDate" => $this->getLastModificationDate()->format(HTML_DATETIME_FORMAT),
+            "deletionDate" => $this->getDeletionDate()->format(HTML_DATETIME_FORMAT),
+        ];
+        return json_encode($array, JSON_PRETTY_PRINT);
+    }
     
 }

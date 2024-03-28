@@ -39,7 +39,7 @@ class InternalRouter implements IService {
     public function __construct(string $uri_base_directory = "") {
         $this->uriBaseDirectory = $uri_base_directory;
         $this->routes = new RouteCollection();
-        $this->routes->addRoute(new APIRoute("/api/exempleDTO", ExampleController::class));
+        $this->routes->addRoute(new APIRoute("/api/exampleDTO", ExampleController::class));
         $this->routes->addRoute(new WebpageRoute("/index.php", "Teacher/Examples/example_page.php"));
         $this->routes->addRoute(new WebpageRoute("/", "Teacher/Examples/example_page.php"));
     }

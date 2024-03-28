@@ -100,31 +100,33 @@ define("REQUEST_PATH", explode("?", REQUEST_URI)[0]);
  * Example: 'localhost/<rootDirectory>'
  * @const
  */
-const WEB_ROOT_DIR = REQUEST_HOSTNAME . WEB_DIRECTORY_SEPARATOR . "420DW3_07278_Project" . WEB_DIRECTORY_SEPARATOR;
+const WEB_ROOT_DIR = WEB_DIRECTORY_SEPARATOR . "420DW3_07278_Project" . WEB_DIRECTORY_SEPARATOR; // REQUEST_HOSTNAME . WEB_DIRECTORY_SEPARATOR . "420DW3_07278_Project" . WEB_DIRECTORY_SEPARATOR;
+
+const WEB_PUBLIC_DIR = WEB_ROOT_DIR . "public" . WEB_DIRECTORY_SEPARATOR;
 
 /**
  * Web path to the public 'css' directory.
  * @const
  */
-const WEB_CSS_DIR = WEB_ROOT_DIR . "css" . WEB_DIRECTORY_SEPARATOR;
+const WEB_CSS_DIR = WEB_PUBLIC_DIR . "css" . WEB_DIRECTORY_SEPARATOR;
 
 /**
  * Web path to the public 'js' directory.
  * @const
  */
-const WEB_JS_DIR = WEB_ROOT_DIR . "js" . WEB_DIRECTORY_SEPARATOR;
+const WEB_JS_DIR = WEB_PUBLIC_DIR . "js" . WEB_DIRECTORY_SEPARATOR;
 
 /**
  * Web path to the public 'pages' directory.
  * @const
  */
-const WEB_PAGES_DIR = WEB_ROOT_DIR . "pages" . WEB_DIRECTORY_SEPARATOR;
+const WEB_PAGES_DIR = WEB_PUBLIC_DIR . "pages" . WEB_DIRECTORY_SEPARATOR;
 
 /**
  * Web path to the public 'images' directory.
  * @const
  */
-const WEB_IMAGES_DIR = WEB_ROOT_DIR . "images" . WEB_DIRECTORY_SEPARATOR;
+const WEB_IMAGES_DIR = WEB_PUBLIC_DIR . "images" . WEB_DIRECTORY_SEPARATOR;
 
 // </editor-fold>
 ?>

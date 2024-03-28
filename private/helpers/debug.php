@@ -127,7 +127,6 @@ class Debug {
     }
     
     public static function logException(Throwable $thrown, bool $doDie = false) : void {
-        if ($thrown instanceof \Teacher\GivenCode\Exceptions\RequestException)
         $file_handle = fopen(PRJ_PRIVATE_DIR . "log.txt", "a");
         $reflect = new ReflectionClass($thrown);
         if ($file_handle) {

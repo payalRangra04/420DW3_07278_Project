@@ -32,3 +32,5 @@ if (empty($_COOKIE["testCookie"])) {
         exit(0);
     }
 }
+
+session_start();

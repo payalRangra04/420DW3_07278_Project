@@ -14,6 +14,7 @@ namespace Teacher\GivenCode\Domain;
 use Exception;
 use Teacher\GivenCode\Abstracts\AbstractController;
 use Teacher\GivenCode\Enumerations\HTTPMethodsEnum;
+use Teacher\GivenCode\Exceptions\RequestException;
 use Teacher\GivenCode\Exceptions\ValidationException;
 
 /**
@@ -54,6 +55,15 @@ class APIRoute extends AbstractRoute {
         return $this->controllerClass;
     }
     
+    /**
+     * {@inheritDoc}
+     *
+     * @return void
+     * @throws RequestException
+     *
+     * @author Marc-Eric Boury
+     * @since  2024-03-28
+     */
     public function route() : void {
         $method = HTTPMethodsEnum::getValue($_SERVER["REQUEST_METHOD"]);
         $controller_class = $this->getControllerClass();

@@ -52,7 +52,7 @@ abstract class AbstractRoute {
     }
     
     /**
-     * TODO: Function documentation
+     * Executes the code associated with the current route.
      *
      * @return void
      *
