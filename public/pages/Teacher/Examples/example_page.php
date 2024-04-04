@@ -34,22 +34,28 @@ $all_example_instances = $example_service->getAllExamples();
     <script type="text/javascript" src="<?= WEB_JS_DIR . "example_page.js" ?>" defer></script>
 </head>
 <body>
-<h1 class="fullwidth text-center">Tests for ExampleDTOs</h1>
 <div class="container">
     <div class="row justify-content-center">
-        <label class="d-flex col-12 col-md-4 align-items-end align-items-md-center justify-content-md-end"
-               for="example-selector">Select an example record:</label>
-        <select id="example-selector" class="col-12 col-md-4">
-            <option value="" selected disabled>Select one...</option>
-            <option value='999999'>FAIL TEST (id# 999999)</option>
-            <?php
-            foreach ($all_example_instances as $instance) {
-                echo "<option value='" . $instance->getId() . "'>" . $instance->getDayOfTheWeek()->value . "</option>";
-            }
-            ?>
-        </select>
-        <div class="col-12 col-md-4 row justify-content-center justify-content-md-start">
-            <button id="view-instance-button" class="btn btn-primary col-8 col-sm-4 col-md-8 col-lg-6 text-uppercase"
+        <h1 class="fullwidth text-center">Tests for ExampleDTOs</h1>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-4 row align-items-end align-items-md-center justify-content-center justify-content-md-end">
+            <label class="col-12 text-start text-md-end align-items-md-center"
+                   for="example-selector">Select an example record:</label>
+        </div>
+        <div class="col-12 col-md-4 row justify-content-center">
+            <select id="example-selector" class="">
+                <option value="" selected disabled>Select one...</option>
+                <option value='999999'>FAIL TEST (id# 999999)</option>
+                <?php
+                foreach ($all_example_instances as $instance) {
+                    echo "<option value='" . $instance->getId() . "'>" . $instance->getDayOfTheWeek()->value . "</option>";
+                }
+                ?>
+            </select>
+        </div>
+        <div class="col-12 col-md-4 row justify-content-center justify-content-md-start py-2 py-md-0 px-4">
+            <button id="view-instance-button" class="btn btn-primary col-9 col-sm-5 col-md-9 col-lg-7 text-uppercase"
                     type="button">Load example
             </button>
         </div>
@@ -99,13 +105,13 @@ $all_example_instances = $example_service->getAllExamples();
             <label class="form-label" for="example-deletion-date">Deletion date: </label>
             <input class="form-control form-control-sm" id="example-deletion-date" type="datetime-local" name="deletionDate" readonly disabled>
         </div>
-        <div class="col-12 d-flex justify-content-around button-row">
-            <button id="create-button" type="button" class="btn btn-primary text-uppercase">Create</button>
-            <button id="clear-button" type="button" class="btn btn-info text-uppercase" disabled>Clear Form</button>
-            <button id="update-button" type="button" class="btn btn-success text-uppercase" disabled>Update</button>
-            <button id="delete-button" type="button" class="btn btn-danger text-uppercase" disabled>Delete</button>
-        </div>
     </form>
+    <div class="col-12 d-flex flex-wrap justify-content-around button-row">
+        <button id="create-button" type="button" class="btn btn-primary col-12 col-md-2 my-1 my-md-0 text-uppercase">Create</button>
+        <button id="clear-button" type="button" class="btn btn-info col-12 col-md-2 my-1 my-md-0 text-uppercase" disabled>Clear Form</button>
+        <button id="update-button" type="button" class="btn btn-success col-12 col-md-2 my-1 my-md-0 text-uppercase" disabled>Update</button>
+        <button id="delete-button" type="button" class="btn btn-danger col-12 col-md-2 my-1 my-md-0 text-uppercase" disabled>Delete</button>
+    </div>
 </div>
 </body>
 </html>
