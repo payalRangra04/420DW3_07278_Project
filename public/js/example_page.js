@@ -4,6 +4,7 @@ function clearExampleForm() {
     $("#clear-button").prop("disabled", true);
     $("#update-button").prop("disabled", true);
     $("#delete-button").prop("disabled", true);
+    document.getElementById("example-selector").value = "";
 }
 
 function updateClearButtonState() {
